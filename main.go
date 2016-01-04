@@ -15,7 +15,7 @@ import (
 var (
 	takeoffsites, landingsites string
 	distance                   int
-	flights                    []*igc.Flight
+	flights                    igc.Flights
 )
 
 func init() {
@@ -35,14 +35,14 @@ func main() {
 		igc.RegisterLandingSiteSource(landing)
 	}
 	igc.MaxDistance = distance
-	flights = []*igc.Flight{}
+	flights = Flights{}
 	err = filepath.Walk(flag.Args()[0], evaluate)
 	if err != nil {
 		log.Print(err)
 	}
 	w := csv.NewWriter(os.Stdout)
 	for _, f := range flights {
-		if err := w.Write(f.Stat()); err != nil {
+		if err := w.Write(f.Record()); err != nil {
 			log.Fatalln("error writing record to csv:", err)
 		}
 	}
