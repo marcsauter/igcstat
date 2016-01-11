@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/csv"
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -15,15 +16,16 @@ import (
 )
 
 var (
-	takeoffsites, landingsites string
-	distance                   int
-	flights                    igc.Flights
+	takeoffsites, landingsites, outfile string
+	distance                            int
+	flights                             igc.Flights
 )
 
 func init() {
 	flag.StringVar(&takeoffsites, "takeoff", "Waypoints_Startplatz.gpx", "takeoff sites")
 	flag.StringVar(&landingsites, "landing", "Waypoints_Landeplatz.gpx", "landing sites")
 	flag.IntVar(&distance, "distance", 300, "maximal distance to the nearest known site")
+	flag.StringVar(&outfile, "outfile", fmt.Sprintf("%s.csv", filepath.Base(os.Args[0])), "output file")
 }
 
 func main() {
@@ -44,7 +46,12 @@ func main() {
 	}
 	sort.Sort(flights)
 	stat := flightstat.NewFlightStat()
-	w := csv.NewWriter(os.Stdout)
+	out, err := os.Create(outfile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer out.Close()
+	w := csv.NewWriter(out)
 	for _, f := range flights {
 		if err := stat.Add(f); err != nil {
 			log.Fatal(err)
