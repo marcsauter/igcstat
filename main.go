@@ -6,8 +6,10 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 
+	"github.com/marcsauter/flightstat"
 	"github.com/marcsauter/igc"
 	"github.com/marcsauter/wpt"
 )
@@ -35,15 +37,25 @@ func main() {
 		igc.RegisterLandingSiteSource(landing)
 	}
 	igc.MaxDistance = distance
-	flights = Flights{}
+	flights = igc.Flights{}
 	err = filepath.Walk(flag.Args()[0], evaluate)
 	if err != nil {
 		log.Print(err)
 	}
+	sort.Sort(flights)
+	stat := flightstat.NewFlightStat()
 	w := csv.NewWriter(os.Stdout)
 	for _, f := range flights {
+		if err := stat.Add(f); err != nil {
+			log.Fatal(err)
+		}
 		if err := w.Write(f.Record()); err != nil {
-			log.Fatalln("error writing record to csv:", err)
+			log.Fatal(err)
+		}
+	}
+	for _, s := range stat.Output() {
+		if err := w.Write(s); err != nil {
+			log.Fatal(err)
 		}
 	}
 	w.Flush()
