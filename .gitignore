@@ -4,3 +4,4 @@ igcstat_lnx
 igcstat_osx
 igcstat.exe
 *.csv
+*.xlsx
