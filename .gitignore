@@ -5,3 +5,4 @@ igcstat_osx
 igcstat.exe
 *.csv
 *.xlsx
+*.igc
