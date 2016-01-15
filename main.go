@@ -20,8 +20,9 @@ var (
 	takeoffsites, landingsites string
 	csvFile, xlsxFile          string
 	writeCsv, writeXlsx        bool
+	stdout                     bool
 	distance                   int
-	flights                    igc.Flights
+	flights                    *igc.Flights
 )
 
 func init() {
@@ -29,7 +30,7 @@ func init() {
 	flag.StringVar(&landingsites, "landing", "Waypoints_Landeplatz.gpx", "landing sites")
 	flag.IntVar(&distance, "distance", 300, "maximal distance to the nearest known site")
 	flag.BoolVar(&writeCsv, "csv", false, "write csv output")
-	flag.StringVar(&csvFile, "csvfile", fmt.Sprintf("%s.csv", filepath.Base(os.Args[0])), "output file")
+	flag.StringVar(&csvFile, "csvfile", fmt.Sprintf("%s.csv", filepath.Base(os.Args[0])), "output file  (stdout writes to stdout)")
 	flag.BoolVar(&writeXlsx, "xlsx", true, "write xlsx output")
 	flag.StringVar(&xlsxFile, "xlsxfile", fmt.Sprintf("%s.xlsx", filepath.Base(os.Args[0])), "output file")
 }
@@ -54,27 +55,25 @@ func main() {
 	}
 	igc.MaxDistance = distance
 
-	flights = igc.Flights{}
+	flights = igc.NewFlights()
 	err = filepath.Walk(dir, evaluate)
 	if err != nil {
 		log.Print(err)
 	}
 	sort.Sort(flights)
 
-	stat, err := flightstat.NewFlightStat(&flights)
+	stat, err := flightstat.NewFlightStat(flights)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fdata := flights.Output()
-	sdata := stat.Output()
 	if writeCsv {
-		if err := writeCsvOutput(csvFile, fdata, sdata); err != nil {
+		if err := writeCsvOutput(csvFile, flights, stat); err != nil {
 			log.Fatal(err)
 		}
 	}
 	if writeXlsx {
-		if err := writeXlsxOutput(xlsxFile, fdata, sdata); err != nil {
+		if err := writeXlsxOutput(xlsxFile, flights, stat); err != nil {
 			log.Fatal(err)
 		}
 	}
@@ -88,89 +87,39 @@ func evaluate(path string, f os.FileInfo, err error) error {
 	if err != nil {
 		return err
 	}
-	flights = append(flights, flight)
+	flights.Add(flight)
 	return nil
 }
 
-func writeCsvOutput(outfile string, fdata, sdata *[][]string) error {
-	out, err := os.Create(outfile)
-	if err != nil {
-		return err
+func writeCsvOutput(outfile string, f *igc.Flights, s *flightstat.FlightStat) error {
+	out := os.Stdout
+	if outfile != "stdout" {
+		out, err := os.Create(outfile)
+		if err != nil {
+			return err
+		}
+		defer out.Close()
 	}
-	defer out.Close()
 	w := csv.NewWriter(out)
-	//for _, f := range flights {
-	//if err := w.Write(f.Record()); err != nil {
-	//log.Fatal(err)
-	//}
-	//}
-	for _, s := range *fdata {
-		if err := w.Write(s); err != nil {
-			return err
-		}
-	}
-	for _, s := range *sdata {
-		if err := w.Write(s); err != nil {
-			return err
-		}
-	}
+	f.Csv(w)
+	s.Csv(w)
 	w.Flush()
 	return nil
 }
 
-func writeXlsxOutput(outfile string, fdata, sdata *[][]string) error {
-	//out, err := os.Create(outfile)
-	//if err != nil {
-	//return err
-	//}
-	//defer out.Close()
+func writeXlsxOutput(outfile string, flights *igc.Flights, stat *flightstat.FlightStat) error {
 	file := xlsx.NewFile()
 	sheet, err := file.AddSheet("Flight Statistics")
 	if err != nil {
 		return err
 	}
+
 	// flights - header
-	// 1st line
-	h1 := sheet.AddRow()
-	h1.AddCell().SetString("Date")
-	to := h1.AddCell()
-	to.Merge(1, 0)
-	to.SetString("Takeoff")
-	h1.AddCell()
-	la := h1.AddCell()
-	la.Merge(1, 0)
-	la.SetString("Landing")
-	h1.AddCell()
-	h1.AddCell().SetString("Duration")
-	h1.AddCell().SetString("Filename")
-	// 2nd line
-	h2 := sheet.AddRow()
-	h2.AddCell()
-	h2.AddCell().SetString("Time")
-	h2.AddCell().SetString("Site")
-	h2.AddCell().SetString("Time")
-	h2.AddCell().SetString("Site")
-	// flights - data
-	for _, r := range *fdata {
-		row := sheet.AddRow()
-		for _, c := range r {
-			cell := row.AddCell()
-			cell.Value = c
-		}
-	}
-	// statistics - header
-	h := sheet.AddRow()
-	h.AddCell().SetString("Period")
-	h.AddCell().SetString("Flights")
-	h.AddCell().SetString("Duration")
+	flights.Xlsx(sheet)
+	sheet.AddRow()
 	// statistics - data
-	for _, r := range *sdata {
-		row := sheet.AddRow()
-		for _, c := range r {
-			cell := row.AddCell()
-			cell.Value = c
-		}
-	}
+	stat.Xlsx(sheet)
+
 	err = file.Save(outfile)
 	if err != nil {
 		return err
