@@ -59,18 +59,14 @@ func Flights(dir string) *igc.Flights {
 					log.Printf("%s: unknown time format '%s'", path, l[3])
 					continue
 				}
-				duration, err := time.ParseDuration(l[5])
-				if err != nil {
-					log.Printf("%s: unknown duration format '%s'", path, l[5])
-					continue
-				}
 				flight := &igc.Flight{
 					Date:        date,
 					TakeOff:     takeoffTime,
 					TakeOffSite: l[2],
 					Landing:     landingTime,
 					LandingSite: l[4],
-					Duration:    duration,
+					Duration:    landingTime.Sub(takeoffTime),
+					Comment:     l[5],
 				}
 				flights.Add(flight)
 			}

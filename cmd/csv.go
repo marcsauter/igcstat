@@ -1,4 +1,4 @@
-// Copyright ©2016 NAME HERE <EMAIL ADDRESS>
+// Copyright ©2016 Marc Sauter <marc.sauter@bluewin.ch>
 //
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
