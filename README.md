@@ -4,6 +4,9 @@ The default output format is _xlsx_ and the default directory is the current wor
 
 ## Installation
 Copy the appropriate binary from the `dist` directory to the parent directory of your IGC files.
+* [a dist/igcstat-linux-amd64](igcstat-linux-amd64)
+* [a dist/igcstat-darwin-amd64](igcstat-darwin-amd64)
+* [a dist/igcstat-windows-amd64](igcstat-windows-amd64.exe)
 
 ### Takeoff and landing sites
 The waypoint files (GPX) with the known takeoff and landing sites are available on flyland.ch. There filenames defaults to:
