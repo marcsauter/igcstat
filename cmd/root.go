@@ -24,7 +24,7 @@ var RootCmd = &cobra.Command{
 	Long: `collect all igc files in a given directory and generate a list of flights
 and statistics over all flights either in xlsx or in csv format`,
 	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Usage()
+		cmd.Run(xlsxCmd, []string{})
 	},
 }
 

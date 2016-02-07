@@ -1,16 +1,30 @@
-all: igcstat_lnx igcstat_osx igcstat.exe
+SRCDIR=.
+DISTDIR=$(SRCDIR)/dist
 
-igcstat_lnx:
-	GOOS=linux GOARCH=amd64 go build -o igcstat_lnx
+SOURCES := $(shell find $(SOURCEDIR) -name '*.go') 
+LNXBIN=igcstat-linux-amd64
+OSXBIN=igcstat-darwin-amd64
+WINBIN=igcstat-windows-amd64.exe
 
-igcstat_osx:
-	GOOS=darwin GOARCH=amd64 go build -o igcstat_osx
+all: $(LNXBIN) $(OSXBIN) $(WINBIN)
 
-igcstat.exe:
-	GOOS=windows GOARCH=amd64 go build -o igcstat.exe
+$(LNXBIN): $(SOURCES)
+	GOOS=linux GOARCH=amd64 go build -o ${LNXBIN}
+
+$(OSXBIN): $(SOURCES)
+	GOOS=darwin GOARCH=amd64 go build -o ${OSXBIN}
+
+$(WINBIN): $(SOURCES)
+	GOOS=windows GOARCH=amd64 go build -o ${WINBIN}
+
+dist: clean all
+	if [ ! -d ${DISTDIR} ] ; then mkdir ${DISTDIR} ; fi
+	cp ${LNXBIN} ${DISTDIR}
+	cp ${OSXBIN} ${DISTDIR}
+	cp ${WINBIN} ${DISTDIR}
 
 clean:
-	rm -f igcstat_lnx igcstat_osx igcstat.exe
+	rm -f ${LNXBIN} ${OSXBIN} ${WINBIN}
 	rm -f *.csv *.xlsx
 
-.PHONY: all clean
+.PHONY: all dist clean

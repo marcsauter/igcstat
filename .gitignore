@@ -1,8 +1,6 @@
 Waypoints_Landeplatz.gpx
 Waypoints_Startplatz.gpx
-igcstat_lnx
-igcstat_osx
-igcstat.exe
+igcstat-*
 *.csv
 *.xlsx
 *.igc

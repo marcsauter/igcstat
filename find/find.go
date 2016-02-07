@@ -2,6 +2,7 @@ package find
 
 import (
 	"encoding/csv"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -35,6 +36,7 @@ func Flights(dir string) *igc.Flights {
 				return err
 			}
 			r := csv.NewReader(f)
+			r.Comment = '#'
 			d, err := r.ReadAll()
 			if err != nil {
 				return err
@@ -44,17 +46,18 @@ func Flights(dir string) *igc.Flights {
 					log.Printf("%s: wrong number of columns", path)
 					continue
 				}
-				date, err := time.Parse(l[0], "02.01.2006")
+				date, err := time.Parse("02.01.2006", l[0])
 				if err != nil {
 					log.Printf("%s: unknown date format '%s'", path, l[0])
+					log.Println(err)
 					continue
 				}
-				takeoffTime, err := time.Parse(l[1], "15:04")
+				takeoffTime, err := time.Parse("02.01.2006 15:04", fmt.Sprintf("%s %s", l[0], l[1]))
 				if err != nil {
 					log.Printf("%s: unknown time format '%s'", path, l[1])
 					continue
 				}
-				landingTime, err := time.Parse(l[3], "15:04")
+				landingTime, err := time.Parse("02.01.2006 15:04", fmt.Sprintf("%s %s", l[0], l[3]))
 				if err != nil {
 					log.Printf("%s: unknown time format '%s'", path, l[3])
 					continue
