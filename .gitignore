@@ -1,6 +1,7 @@
 Waypoints_Landeplatz.gpx
 Waypoints_Startplatz.gpx
 igcstat-*
+!dist/
 *.csv
 *.xlsx
 *.igc
