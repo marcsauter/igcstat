@@ -23,8 +23,8 @@ $(WINBIN): $(SOURCES)
 
 dist: clean all
 	if [ ! -d ${DISTDIR} ] ; then mkdir ${DISTDIR} ; fi
-	tar --transform="flags=r;s|${LNXBIN}|${BINARY}|;s|scripts/||" -cf ${LNXDIST} ${LNXBIN} scripts/igcstat.sh
-	tar --transform="flags=r;s|${OSXBIN}|${BINARY}|;s|scripts/||" -cf ${OSXDIST} ${OSXBIN} scripts/igcstat.sh
+	tar --transform="flags=r;s|${LNXBIN}|${BINARY}|" -cf ${LNXDIST} ${LNXBIN}
+	tar --transform="flags=r;s|${OSXBIN}|${BINARY}|" -cf ${OSXDIST} ${OSXBIN}
 	zip ${WINDIST} -j scripts ${WINBIN} scripts/igcstat.cmd
 	printf "@ ${WINBIN}\n@=${BINARY}.exe\n" | zipnote -w ${WINDIST}
 

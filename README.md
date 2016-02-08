@@ -15,12 +15,12 @@ Download the appropriate binary:
 
 ### Linux 
 * Extract the archive in the parent directory of your IGC files: `tar -xf igcstat-linux-amd64.tar` 
-* Execute `igcstat.sh`
+* Execute `igcstat`
 * Open `igcstat.xlsx`
 
 ### OSX 
 * Extract the archive in the parent directory of your IGC files: `tar -xf igcstat-osx-amd64.tar` (or just double-click in Finder) 
-* Execute `igcstat.sh` (first run: right click - Open With - Terminal)
+* Execute `igcstat` (first run: right click - Open With - Terminal)
 * Open `igcstat.xlsx`
 
 ### Takeoff and landing sites
