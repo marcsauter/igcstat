@@ -3,7 +3,7 @@
 The default output format is _xlsx_ and the default directory is the current working directory.
 
 ## Installation
-Copy the appropriate binary from the `dist` directory to the parent directory of your IGC files.
+Download the appropriate binary:
 * [Linux (amd64)](dist/igcstat-linux-amd64.tar?raw=true)
 * [OSX (amd64)](dist/igcstat-osx-amd64.tar?raw=true)
 * [Windows (amd64)](dist/igcstat-windows-amd64.zip?raw=true)
