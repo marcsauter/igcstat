@@ -30,6 +30,7 @@ func Flights(dir string) *igc.Flights {
 			}
 			flights.Add(flight)
 		}
+		// manually added flights
 		if strings.HasSuffix(f.Name(), "_manual.csv") {
 			f, err := os.Open(path)
 			if err != nil {
