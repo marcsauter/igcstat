@@ -9,24 +9,25 @@ Download the appropriate binary:
 * [Windows (amd64)](dist/igcstat-windows-amd64.zip?raw=true)
 
 ### Windows
-* `unzip igcstat-windows-amd64.zip` in the parent directory of your IGC files
-* start by double-click `igcstat.cmd` in the explorer
-* open `igcstat.xlsx`
+* Extract `igcstat-windows-amd64.zip` in the parent directory of your IGC files.
+* Execute `igcstat.cmd` (double-click in explorer)
+* Open `igcstat.xlsx`
 
 ### Linux 
-* `tar xf igcstat-linux-amd64.tar` in the parent directory of your IGC files
-* execute `igcstat`
-* open `igcstat.xlsx`
+* Extract the archive in the parent directory of your IGC files: `tar -xf igcstat-linux-amd64.tar` 
+* Execute `igcstat.sh`
+* Open `igcstat.xlsx`
 
 ### OSX 
-* `tar xf igcstat-osx-amd64.tar` in the parent directory of your IGC files
-* execute `igcstat`
-* open `igcstat.xlsx`
+* Extract the archive in the parent directory of your IGC files: `tar -xf igcstat-osx-amd64.tar` (or just double-click in Finder) 
+* Execute `igcstat.sh` (first run: right click - Open With - Terminal)
+* Open `igcstat.xlsx`
 
 ### Takeoff and landing sites
 The waypoint files (GPX) with the known takeoff and landing sites are available on flyland.ch. There filenames defaults to:
 * Waypoints_Landeplatz.gpx 
 * Waypoints_Startplatz.gpx
+
 ... and will be searched in the current working directory. Other filenames can be defined on the command line.
 
 The maximal distance to an official takeoff or landing site is 300m and can be adjusted on the command line.
