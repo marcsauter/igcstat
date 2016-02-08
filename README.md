@@ -34,8 +34,6 @@ The maximal distance to an official takeoff or landing site is 300m and can be a
 
 __If no waypoint file are available or no official takeoff or landing site can be found, the Google Maps API will be used.__
 
-###
-
 ## Add flights manually
 You can add flights manually to the statistics by adding CSV formatted files somewhere below your starting directory.
 The name of the CSV file has to match the pattern `<name>_manual.csv` (e.g. `addflights_manual.csv`).
