@@ -21,6 +21,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/marcsauter/flightstat"
 	"github.com/marcsauter/igcstat/find"
@@ -54,11 +55,13 @@ var csvCmd = &cobra.Command{
 		flights.Csv(w)
 		stat.Csv(w)
 		w.Flush()
+		fmt.Println(csvfile, "written")
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(csvCmd)
-	csvCmd.Flags().StringVarP(&csvfile, "file", "f", fmt.Sprintf("%s.csv", os.Args[0]), "output filename")
+	l := len(os.Args[0]) - len(filepath.Ext(os.Args[0])) // len of filename without extension
+	csvCmd.Flags().StringVarP(&csvfile, "file", "f", fmt.Sprintf("%s.csv", os.Args[0][0:l]), "output filename")
 	csvCmd.Flags().BoolVar(&stdout, "stdout", false, "write to stdout")
 }

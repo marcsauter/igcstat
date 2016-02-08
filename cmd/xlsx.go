@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/marcsauter/flightstat"
 	"github.com/marcsauter/igcstat/find"
@@ -51,10 +52,12 @@ var xlsxCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
+		fmt.Println(xlsxfile, "written")
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(xlsxCmd)
-	xlsxCmd.Flags().StringVarP(&xlsxfile, "file", "f", fmt.Sprintf("%s.xlsx", os.Args[0]), "output filename")
+	l := len(os.Args[0]) - len(filepath.Ext(os.Args[0])) // len of filename without extension
+	xlsxCmd.Flags().StringVarP(&xlsxfile, "file", "f", fmt.Sprintf("%s.xlsx", os.Args[0][0:l]), "output filename")
 }

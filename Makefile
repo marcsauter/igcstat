@@ -1,10 +1,14 @@
-SRCDIR=.
-DISTDIR=$(SRCDIR)/dist
+SRCDIR = .
+DISTDIR = $(SRCDIR)/dist
 
-SOURCES := $(shell find $(SOURCEDIR) -name '*.go') 
-LNXBIN=igcstat-linux-amd64
-OSXBIN=igcstat-darwin-amd64
-WINBIN=igcstat-windows-amd64.exe
+SOURCES := $(shell find $(SRCDIR) -name '*.go') 
+BINARY = igcstat
+LNXBIN = igcstat-linux-amd64
+OSXBIN = igcstat-darwin-amd64
+WINBIN = igcstat-windows-amd64.exe
+LNXDIST = dist/igcstat-linux-amd64.tar
+OSXDIST = dist/igcstat-osx-amd64.tar
+WINDIST = dist/igcstat-windows-amd64.zip
 
 all: $(LNXBIN) $(OSXBIN) $(WINBIN)
 
@@ -19,12 +23,16 @@ $(WINBIN): $(SOURCES)
 
 dist: clean all
 	if [ ! -d ${DISTDIR} ] ; then mkdir ${DISTDIR} ; fi
-	cp ${LNXBIN} ${DISTDIR}
-	cp ${OSXBIN} ${DISTDIR}
-	cp ${WINBIN} ${DISTDIR}
+	tar --transform="flags=r;s|${LNXBIN}|${BINARY}|" -cf ${LNXDIST} ${LNXBIN}
+	tar --transform="flags=r;s|${OSXBIN}|${BINARY}|" -cf ${OSXDIST} ${OSXBIN}
+	zip ${WINDIST} -j scripts ${WINBIN} scripts/igcstat.cmd
+	printf "@ ${WINBIN}\n@=${BINARY}.exe\n" | zipnote -w ${WINDIST}
+
+deps:
+	go get -u ./...
 
 clean:
-	rm -f ${LNXBIN} ${OSXBIN} ${WINBIN}
+	rm -f ${LNXBIN} ${OSXBIN} ${WINBIN} ${LNXDIST} ${OSXDIST} ${WINDIST}
 	rm -f *.csv *.xlsx
 
-.PHONY: all dist clean
+.PHONY: all dist deps clean

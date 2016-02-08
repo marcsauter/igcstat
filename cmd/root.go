@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/marcsauter/igc"
+	"github.com/marcsauter/wpt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -64,4 +66,16 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
+
+	if to, err := wpt.NewWaypoints(takeoffSites); err == nil {
+		fmt.Printf("using %s for takeoff site lookup\n", takeoffSites)
+		igc.RegisterTakeoffSiteSource(to)
+	}
+
+	if la, err := wpt.NewWaypoints(landingSites); err == nil {
+		fmt.Printf("using %s for landing site lookup\n", landingSites)
+		igc.RegisterLandingSiteSource(la)
+	}
+
+	igc.MaxDistance = distance
 }

@@ -4,15 +4,30 @@ The default output format is _xlsx_ and the default directory is the current wor
 
 ## Installation
 Copy the appropriate binary from the `dist` directory to the parent directory of your IGC files.
-* [Linux (amd64)](dist/igcstat-linux-amd64?raw=true)
-* [Mac OSX (amd64)](dist/igcstat-darwin-amd64?raw=true)
-* [Windows (amd64)](dist/igcstat-windows-amd64.exe?raw=true)
+* [Linux (amd64)](dist/igcstat-linux-amd64.tar?raw=true)
+* [OSX (amd64)](dist/igcstat-osx-amd64.tar?raw=true)
+* [Windows (amd64)](dist/igcstat-windows-amd64.zip?raw=true)
+
+### Windows
+* `unzip igcstat-windows-amd64.zip` in the parent directory of your IGC files
+* start by double-click `igcstat.cmd` in the explorer
+* open `igcstat.xlsx`
+
+### Linux 
+* `tar xf igcstat-linux-amd64.tar` in the parent directory of your IGC files
+* execute `igcstat`
+* open `igcstat.xlsx`
+
+### OSX 
+* `tar xf igcstat-osx-amd64.tar` in the parent directory of your IGC files
+* execute `igcstat`
+* open `igcstat.xlsx`
 
 ### Takeoff and landing sites
 The waypoint files (GPX) with the known takeoff and landing sites are available on flyland.ch. There filenames defaults to:
 * Waypoints_Landeplatz.gpx 
 * Waypoints_Startplatz.gpx
-... and will be searched in the current working directory. Other files can be defined on the command line.
+... and will be searched in the current working directory. Other filenames can be defined on the command line.
 
 The maximal distance to an official takeoff or landing site is 300m and can be adjusted on the command line.
 
