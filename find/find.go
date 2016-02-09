@@ -64,10 +64,14 @@ func Flights(dir string) *igc.Flights {
 					continue
 				}
 				flight := &igc.Flight{
-					Date:        date,
-					TakeOff:     takeoffTime,
+					Date: date,
+					TakeOff: igc.Fix{
+						Time: takeoffTime,
+					},
 					TakeOffSite: l[2],
-					Landing:     landingTime,
+					Landing: igc.Fix{
+						Time: landingTime,
+					},
 					LandingSite: l[4],
 					Duration:    landingTime.Sub(takeoffTime),
 					Comment:     l[5],
