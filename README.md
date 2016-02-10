@@ -34,6 +34,12 @@ The maximal distance to an official takeoff or landing site is 300m and can be a
 
 __If no waypoint file are available or no official takeoff or landing site can be found, the Google Maps API will be used.__
 
+### Configuration
+Configure your settings in igcstat.yaml. The file will be searched ...
+* in your home directory
+* in the source path (where your search for IGC files starts)
+* in the directory, where the program resides
+
 ## Add flights manually
 You can add flights manually to the statistics by adding CSV formatted files somewhere below your starting directory.
 The name of the CSV file has to match the pattern `<name>_manual.csv` (e.g. `addflights_manual.csv`).
@@ -42,11 +48,15 @@ The name of the CSV file has to match the pattern `<name>_manual.csv` (e.g. `add
 Comment lines start with `#` and will be ignored.
 * Date:        dd.mm.yyyy
 * TakeOffTime: hh.mm
-* TakeOffSite: e.g. Amisbuehl
+* TakeOffSite: e.g. "Amisbuehl"
 * LandingTime: hh:mm
-* LandingSite: e.g. Lehn
+* LandingSite: e.g. "Lehn"
+* Glider:      e.g. "Crazy Wing 2"
 * Comment:     e.g. "vario malfunction"
 
 ### Example
-    # Date,TakeOffTime,TakeOffSite,LandingTime,LandingSite,Comment
-    "18.04.2015","19:15","Amisbuehl","19:30","Lehn","no vario"
+    # Date,TakeOffTime,TakeOffSite,LandingTime,LandingSite,Glider,Comment
+    "18.04.2015","19:15","Amisbuehl","19:30","Lehn","Crazy Wing 2","no vario"
+
+## Add glider manually
+You can overwrite the glider per IGC file. Create the file `<IGC file>.glider` and enter the glider name.

@@ -24,40 +24,29 @@ import (
 	"github.com/marcsauter/flightstat"
 	"github.com/marcsauter/igcstat/find"
 	"github.com/spf13/cobra"
-	"github.com/tealeg/xlsx"
+	"github.com/spf13/viper"
 )
-
-var xlsxfile string
 
 // xlsxCmd respresents the xlsx command
 var xlsxCmd = &cobra.Command{
 	Use:   "xlsx",
 	Short: "output in xslx format",
 	Run: func(cmd *cobra.Command, args []string) {
-		flights := find.Flights(dir)
-		stat, err := flightstat.NewFlightStat(flights)
+		fmt.Printf("writing output to %s ... ", viper.GetString("xlsxfile"))
+		flights := find.Flights(viper.GetString("srcpath"))
+		stat, err := flightstat.NewFlightStat(flights, viper.GetString("glider"))
 		if err != nil {
 			log.Fatal(err)
 		}
-		// write file
-		file := xlsx.NewFile()
-		sheet, err := file.AddSheet("Flight Statistics")
-		if err != nil {
-			log.Fatal(err)
-		}
-		flights.Xlsx(sheet)
-		sheet.AddRow()
-		stat.Xlsx(sheet)
-		err = file.Save(xlsxfile)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println(xlsxfile, "written")
+		flightstat.Xlsx(flights, stat, viper.GetString("xlsxfile"))
+		fmt.Println("DONE")
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(xlsxCmd)
 	l := len(os.Args[0]) - len(filepath.Ext(os.Args[0])) // len of filename without extension
-	xlsxCmd.Flags().StringVarP(&xlsxfile, "file", "f", fmt.Sprintf("%s.xlsx", os.Args[0][0:l]), "output filename")
+	viper.SetDefault("xlsxfile", fmt.Sprintf("%s.xlsx", os.Args[0][0:l]))
+	xlsxCmd.Flags().StringP("file", "f", viper.GetString("xlsxfile"), "xlsx output filename")
+	viper.BindPFlag("xlsxfile", xlsxCmd.Flags().Lookup("file"))
 }

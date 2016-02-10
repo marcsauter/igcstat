@@ -23,9 +23,9 @@ $(WINBIN): $(SOURCES)
 
 dist: clean all
 	if [ ! -d ${DISTDIR} ] ; then mkdir ${DISTDIR} ; fi
-	tar --transform="flags=r;s|${LNXBIN}|${BINARY}|" -cf ${LNXDIST} ${LNXBIN}
-	tar --transform="flags=r;s|${OSXBIN}|${BINARY}|" -cf ${OSXDIST} ${OSXBIN}
-	zip ${WINDIST} -j scripts ${WINBIN} scripts/igcstat.cmd
+	tar --transform="flags=r;s|${LNXBIN}|${BINARY}|" -cf ${LNXDIST} ${LNXBIN} ${BINARY}.yaml
+	tar --transform="flags=r;s|${OSXBIN}|${BINARY}|" -cf ${OSXDIST} ${OSXBIN} ${BINARY}.yaml
+	zip ${WINDIST} -j scripts ${WINBIN} ${BINARY}.yaml scripts/${BINARY}.cmd
 	printf "@ ${WINBIN}\n@=${BINARY}.exe\n" | zipnote -w ${WINDIST}
 
 deps:

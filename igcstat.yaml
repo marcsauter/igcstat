@@ -1,0 +1,8 @@
+---
+srcpath: "."
+takeoff: "Waypoints_Startplatz.gpx"
+landing: "Waypoints_Landeplatz.gpx"
+distance: 300
+csvfile: "igcstat.csv"
+xlsfile: "igcstat.xlsx"
+glider: "Ozone Mojo 4"

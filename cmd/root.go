@@ -12,12 +12,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var (
-	cfgFile                    string
-	dir                        string
-	takeoffSites, landingSites string
-	distance                   int
-)
+var cfgFile string
 
 // This represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -40,16 +35,26 @@ func Execute() {
 }
 
 func init() {
+
 	cobra.OnInitialize(initConfig)
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.igcstat.yaml)")
-	d, err := filepath.Abs(filepath.Dir(os.Args[0]))
+
+	RootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default is $HOME/igcstat.yaml)")
+
+	path, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
 		log.Fatal(err)
 	}
-	RootCmd.PersistentFlags().StringVarP(&dir, "dir", "d", d, "start directory")
-	RootCmd.PersistentFlags().StringVar(&takeoffSites, "takeoff", "Waypoints_Startplatz.gpx", "takeoff sites")
-	RootCmd.PersistentFlags().StringVar(&landingSites, "landing", "Waypoints_Landeplatz.gpx", "landing sites")
-	RootCmd.PersistentFlags().IntVar(&distance, "distance", 300, "maximal distance to the nearest known site")
+	RootCmd.Flags().StringP("srcpath", "s", path, "start directory")
+	viper.BindPFlag("srcpath", RootCmd.Flags().Lookup("srcpath"))
+
+	RootCmd.Flags().StringP("takeoff", "t", "Waypoints_Startplatz.gpx", "takeoff sites")
+	viper.BindPFlag("takeoff", RootCmd.Flags().Lookup("takeoff"))
+
+	RootCmd.Flags().StringP("landing", "l", "Waypoints_Landeplatz.gpx", "landing sites")
+	viper.BindPFlag("landing", RootCmd.Flags().Lookup("landing"))
+
+	RootCmd.Flags().IntP("distance", "d", 300, "maximal distance to the nearest known site")
+	viper.BindPFlag("distance", RootCmd.Flags().Lookup("distance"))
 }
 
 // Read in config file and ENV variables if set.
@@ -58,24 +63,37 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 	}
 
-	viper.SetConfigName(".igcstat") // name of config file (without extension)
-	viper.AddConfigPath("$HOME")    // adding home directory as first search path
-	viper.AutomaticEnv()            // read in environment variables that match
+	path, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatal(err)
+	}
+	viper.SetConfigType("yaml")
+	viper.SetConfigName("igcstat")                  // name of config file (without extension)
+	viper.AddConfigPath("$HOME")                    // adding home directory as first search path
+	viper.AddConfigPath(path)                       // adding source directory as second search path
+	viper.AddConfigPath(viper.GetString("srcpath")) // adding source directory as second search path
+	viper.AutomaticEnv()                            // read in environment variables that match
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+		fmt.Println("using config file:", viper.ConfigFileUsed())
 	}
 
-	if to, err := wpt.NewWaypoints(takeoffSites); err == nil {
-		fmt.Printf("using %s for takeoff site lookup\n", takeoffSites)
+	//
+	igc.MaxDistance = viper.GetInt("distance")
+	fmt.Printf("searching within a radius of %dm for known takeoff/landing sites\n", viper.GetInt("distance"))
+
+	//
+	if to, err := wpt.NewWaypoints(viper.GetString("takeoff")); err == nil {
+		fmt.Printf("using %s for takeoff site lookup\n", viper.GetString("takeoff"))
 		igc.RegisterTakeoffSiteSource(to)
 	}
 
-	if la, err := wpt.NewWaypoints(landingSites); err == nil {
-		fmt.Printf("using %s for landing site lookup\n", landingSites)
+	//
+	if la, err := wpt.NewWaypoints(viper.GetString("landing")); err == nil {
+		fmt.Printf("using %s for landing site lookup\n", viper.GetString("landing"))
 		igc.RegisterLandingSiteSource(la)
 	}
 
-	igc.MaxDistance = distance
+	fmt.Printf("starting search for flights in %s\n", viper.GetString("srcpath"))
 }

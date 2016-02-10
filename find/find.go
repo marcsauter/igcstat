@@ -3,6 +3,7 @@ package find
 import (
 	"encoding/csv"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -28,6 +29,11 @@ func Flights(dir string) *igc.Flights {
 			if err != nil {
 				return err
 			}
+			if _, err := os.Stat(fmt.Sprintf("%s.glider", path)); err == nil {
+				if g, err := ioutil.ReadFile(fmt.Sprintf("%s.glider", path)); err == nil {
+					flight.Glider = strings.Trim(string(g), " \t\r\n")
+				}
+			}
 			flights.Add(flight)
 		}
 		// manually added flights
@@ -43,7 +49,7 @@ func Flights(dir string) *igc.Flights {
 				return err
 			}
 			for _, l := range d {
-				if len(l) < 6 {
+				if len(l) < 7 {
 					log.Printf("%s: wrong number of columns", path)
 					continue
 				}
@@ -74,7 +80,8 @@ func Flights(dir string) *igc.Flights {
 					},
 					LandingSite: l[4],
 					Duration:    landingTime.Sub(takeoffTime),
-					Comment:     l[5],
+					Glider:      l[5],
+					Comment:     l[6],
 				}
 				flights.Add(flight)
 			}

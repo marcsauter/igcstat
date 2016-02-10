@@ -16,9 +16,7 @@
 package cmd
 
 import (
-	"encoding/csv"
 	"fmt"
-	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -26,42 +24,30 @@ import (
 	"github.com/marcsauter/flightstat"
 	"github.com/marcsauter/igcstat/find"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
-
-var csvfile string
-var stdout bool
 
 // csvCmd respresents the csv command
 var csvCmd = &cobra.Command{
 	Use:   "csv",
 	Short: "output in csv format",
 	Run: func(cmd *cobra.Command, args []string) {
-		flights := find.Flights(dir)
-		stat, err := flightstat.NewFlightStat(flights)
+		fmt.Printf("writing output to %s ... ", viper.GetString("csvfile"))
+		flights := find.Flights(viper.GetString("srcpath"))
+		stat, err := flightstat.NewFlightStat(flights, viper.GetString("glider"))
 		if err != nil {
 			log.Fatal(err)
 		}
-		// write file
-		f, err := os.Create(csvfile)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer f.Close()
-		out := io.MultiWriter(f)
-		if stdout {
-			out = io.MultiWriter(f, os.Stdout)
-		}
-		w := csv.NewWriter(out)
-		flights.Csv(w)
-		stat.Csv(w)
-		w.Flush()
-		fmt.Println(csvfile, "written")
+		flightstat.Csv(flights, stat, viper.GetString("csvfile"))
+		fmt.Println("DONE")
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(csvCmd)
 	l := len(os.Args[0]) - len(filepath.Ext(os.Args[0])) // len of filename without extension
-	csvCmd.Flags().StringVarP(&csvfile, "file", "f", fmt.Sprintf("%s.csv", os.Args[0][0:l]), "output filename")
-	csvCmd.Flags().BoolVar(&stdout, "stdout", false, "write to stdout")
+	viper.SetDefault("csvfile", fmt.Sprintf("%s.csv", os.Args[0][0:l]))
+	csvCmd.Flags().StringP("file", "f", viper.GetString("csvfile"), "csv output filename")
+	viper.BindPFlag("csvfile", csvCmd.Flags().Lookup("file"))
+
 }
