@@ -2,6 +2,7 @@
   "name": "igcstatconfigui",
   "private": true,
   "devDependencies": {
+    "angular-xeditable": "0.0.1",
     "autoprefixer-core": "^5.2.1",
     "grunt": "^0.4.5",
     "grunt-angular-templates": "^0.5.7",

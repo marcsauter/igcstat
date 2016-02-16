@@ -8,10 +8,9 @@
  * Controller of the igcstatConfigUiApp
  */
 angular.module('igcstatConfigUiApp')
-  .controller('MainCtrl', function () {
-    this.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
-  });
+
+.controller('GeneralCtrl', function ($scope) {
+  $scope.user = {
+    name: 'awesome user'
+  };
+});

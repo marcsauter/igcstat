@@ -1,0 +1,57 @@
+<div ng-controller="GeneralCtrl">
+  <form editable-form name="editableForm" onbeforesave="saveUser()">
+<!--
+srcpath: "."
+takeoff: "Waypoints_Startplatz.gpx"
+landing: "Waypoints_Landeplatz.gpx"
+distance: 300
+csvfile: "igcstat.csv"
+xlsfile: "igcstat.xlsx"
+glider: "Ozone Mojo 4"
+-->
+    <div>
+      <span class="title">Source path: </span>
+      <span editable-text="general.path" e-name="path" e-required>{{ general.path }}</span>
+    </div>
+    <div>
+      <span class="title">Takeoff site GPX file: </span>
+      <span editable-text="general.gpx.takeOff" e-name="takeoff" e-required>{{ general.gpx.takeoff }}</span>
+    </div>
+    <div>
+      <span class="title">Landing site GPX file: </span>
+      <span editable-text="general.gpx.landing" e-name="landing" e-required>{{ general.gpx.landing }}</span>
+    </div>
+    <div>
+      <span class="title">Distance: </span>
+      <span editable-text="general.distance" e-name="distance" e-required>{{ general.distance }}</span>
+    </div>
+    <div>
+      <span class="title">CSV output file: </span>
+      <span editable-text="general.output.csv" e-name="csvfile" e-required>{{ general.output.csv }}</span>
+    </div>
+    <div>
+      <span class="title">XLSX output file: </span>
+      <span editable-text="general.output.xlsx" e-name="xlsxfile" e-required>{{ general.output.xlsx }}</span>
+    </div>
+    <div>
+      <span class="title">Default glider: </span>
+      <span editable-text="general.glider" e-name="glider" e-required>{{ general.glider }}</span>
+    </div>
+    <div>
+    <div class="buttons">
+      <!-- button to show form -->
+      <button type="button" class="btn btn-default" ng-click="editableForm.$show()" ng-show="!editableForm.$visible">
+        Edit
+      </button>
+      <!-- buttons to submit / cancel form -->
+      <span ng-show="editableForm.$visible">
+        <button type="submit" class="btn btn-primary" ng-disabled="editableForm.$waiting">
+          Save
+        </button>
+        <button type="button" class="btn btn-default" ng-disabled="editableForm.$waiting" ng-click="editableForm.$cancel()">
+          Cancel
+        </button>
+      </span>
+    </div>
+  </form>
+</div>

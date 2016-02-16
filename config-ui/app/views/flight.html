@@ -1,0 +1,76 @@
+<div ng-controller="FlightCtrl">
+  <table class="table table-bordered table-hover table-condensed">
+    <tr style="font-weight: bold">
+      <td style="width:10%">Date</td>
+      <td colspan="2" style="width:20%">Takeoff</td>
+      <td colspan="2" style="width:20%">Landing</td>
+      <td style="width:15%">Glider</td>
+      <td style="width:15%">Comment</td>
+      <td style="width:10%"></td>
+    </tr>
+    <tr style="font-weight: bold">
+      <td style="width:10%"></td>
+      <td style="width:6%">Time</td>
+      <td style="width:14%">Site</td>
+      <td style="width:6%">Time</td>
+      <td style="width:14%">Site</td>
+      <td style="width:15%"></td>
+      <td style="width:15%"></td>
+      <td style="width:10%"></td>
+    </tr>
+    <tr ng-repeat="flight in flights">
+      <td>
+        <span editable-text="flight.date" e-name="date" e-form="rowform" e-required>
+          {{ flight.date }}
+        </span>
+      </td>
+      <td>
+        <span editable-text="flight.takeOffTime" e-name="takeOffTime" e-form="rowform" e-required>
+          {{ flight.takeOffTime }}
+        </span>
+      </td>
+      <td>
+        <span editable-text="flight.takeOffSite" e-name="takeOffSite"  e-form="rowform" e-required>
+          {{ flight.takeOffSite }}
+        </span>
+      </td>
+      <td>
+        <span editable-text="flight.landingTime" e-name="landingTime" e-form="rowform" e-required>
+          {{ flight.landingTime }}
+        </span>
+      </td>
+      <td>
+        <span editable-text="flight.landingSite" e-name="landingSite"  e-form="rowform" e-required>
+          {{ flight.landingSite }}
+        </span>
+      </td>
+      <td>
+        <span editable-text="flight.glider" e-name="glider"  e-form="rowform" e-required>
+          {{ flight.glider }}
+        </span>
+      </td>
+      <td>
+        <span editable-text="flight.comment" e-name="comment"  e-form="rowform" e-required>
+          {{ flight.comment }}
+        </span>
+      </td>
+      <td style="white-space: nowrap">
+        <!-- form -->
+        <form editable-form name="rowform" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == flight">
+          <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary">
+            save
+          </button>
+          <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-default">
+            cancel
+          </button>
+        </form>
+        <div class="buttons" ng-show="!rowform.$visible">
+          <button class="btn btn-primary" ng-click="rowform.$show()">edit</button>
+          <button class="btn btn-danger" ng-click="removeFlight($index)">del</button>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <button class="btn btn-default" ng-click="addFlight()">Add row</button>
+</div>
