@@ -32,12 +32,12 @@ var xlsxCmd = &cobra.Command{
 	Use:   "xlsx",
 	Short: "output in xslx format",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("writing output to %s ... ", viper.GetString("xlsxfile"))
 		flights := find.Flights(viper.GetString("srcpath"))
 		stat, err := flightstat.NewFlightStat(flights, viper.GetString("glider"))
 		if err != nil {
 			log.Fatal(err)
 		}
+		fmt.Printf("writing output to %s ... ", viper.GetString("xlsxfile"))
 		flightstat.Xlsx(flights, stat, viper.GetString("xlsxfile"))
 		fmt.Println("DONE")
 	},

@@ -24,8 +24,8 @@ func Flights(dir string) *igc.Flights {
 		if f.IsDir() {
 			return nil
 		}
-		fmt.Printf("processing %s\n", path)
 		if strings.HasSuffix(f.Name(), ".igc") {
+			fmt.Printf("processing: %s\n", path)
 			flight, err := igc.NewFlight(path)
 			if err != nil {
 				return err
@@ -39,6 +39,7 @@ func Flights(dir string) *igc.Flights {
 		}
 		// manually added flights
 		if strings.HasSuffix(f.Name(), "_manual.csv") {
+			fmt.Printf("processing manual entries from: %s\n", path)
 			f, err := os.Open(path)
 			if err != nil {
 				return err

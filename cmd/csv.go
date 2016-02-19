@@ -32,12 +32,12 @@ var csvCmd = &cobra.Command{
 	Use:   "csv",
 	Short: "output in csv format",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("writing output to %s ... ", viper.GetString("csvfile"))
 		flights := find.Flights(viper.GetString("srcpath"))
 		stat, err := flightstat.NewFlightStat(flights, viper.GetString("glider"))
 		if err != nil {
 			log.Fatal(err)
 		}
+		fmt.Printf("writing output to %s ... ", viper.GetString("csvfile"))
 		flightstat.Csv(flights, stat, viper.GetString("csvfile"))
 		fmt.Println("DONE")
 	},
