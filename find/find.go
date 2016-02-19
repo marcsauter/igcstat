@@ -24,6 +24,7 @@ func Flights(dir string) *igc.Flights {
 		if f.IsDir() {
 			return nil
 		}
+		fmt.Printf("processing %s\n", path)
 		if strings.HasSuffix(f.Name(), ".igc") {
 			flight, err := igc.NewFlight(path)
 			if err != nil {
